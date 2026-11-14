@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>hadyr icon maker</title>
+<link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
+<style>
+body{font-family:system-ui,sans-serif;margin:0;padding:20px;background:#e4f0e6;color:#111;text-align:center}
+canvas{width:200px;height:200px;border-radius:44px;margin:14px auto;display:block}
+button{border:0;border-radius:14px;padding:12px 18px;font:600 16px system-ui;background:#111;color:#fff;margin:6px}
+p{max-width:420px;margin:8px auto;font-size:14px}
+</style>
+</head>
+<body>
+<h2>♥hadyr♥</h2>
+<canvas id="c" width="512" height="512"></canvas>
+<p>Download the three files and put them next to index.html: icon-192.png, icon-512.png, icon-maskable-512.png</p>
+<div>
+<button data-s="192" data-m="0">icon-192.png</button>
+<button data-s="512" data-m="0">icon-512.png</button>
+<button data-s="512" data-m="1">icon-maskable-512.png</button>
+</div>
+<script>
+const HEART=new Path2D('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
+function draw(cv,size,maskable){
+  cv.width=cv.height=size;
+  const x=cv.getContext('2d'),k=size/512;
+  x.clearRect(0,0,size,size);
+  x.fillStyle='#111';
+  if(maskable){x.fillRect(0,0,size,size)}
+  else{x.beginPath();x.roundRect(0,0,size,size,112*k);x.fill()}
+  const sc=maskable?.8:1; // keep content inside the safe zone for maskable
+  x.save();x.translate(size/2,size/2);x.scale(k*sc,k*sc);x.translate(-256,-256);
+  x.fillStyle='#fff';
+  [[34,208],[401,208]].forEach(([px,py])=>{x.save();x.translate(px,py);x.scale(3.2,3.2);x.fill(HEART);x.restore()});
+  x.font="112px 'Kaushan Script', cursive";x.textAlign='center';x.fillText('hadyr',256,300);
+  x.restore();
+}
+const prev=document.getElementById('c');
+document.fonts.load("112px 'Kaushan Script'").then(()=>draw(prev,512,false));
+document.querySelectorAll('button').forEach(b=>b.onclick=async()=>{
+  await document.fonts.load("112px 'Kaushan Script'");
+  const cv=document.createElement('canvas');draw(cv,+b.dataset.s,b.dataset.m==='1');
+  const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download=b.textContent;a.click();
+});
+</script>
+</body>
+</html>

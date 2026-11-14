@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#e4f0e6">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Kaushan+Script&family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
+<title>hadyr</title>
+<style>
+:root{--bg:#e4f0e6;--card:#f4faf5;--ac:#9cc9a8;--ink:#111;--soft:#444;--wp:none}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:'Cairo',system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:16px}
+body::before{content:"";position:fixed;inset:0;background:var(--wp) center/cover no-repeat;z-index:-1}
+#app{max-width:560px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 16px 120px}
+header{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 14px}
+.brand{display:flex;align-items:center;gap:8px;font-size:30px;line-height:1.1}
+.brand .heart{color:#111;font-size:20px}
+.brand .name-en{font-family:'Kaushan Script',cursive}
+.brand .name-ar{font-family:'Aref Ruqaa',serif;font-weight:700;font-size:34px}
+.sub{font-size:13px;color:var(--soft)}
+h2{font-size:22px;font-weight:800;margin:6px 2px 10px}
+.seg{display:flex;background:rgba(255,255,255,.6);border-radius:999px;padding:4px;margin-bottom:14px}
+.seg button{flex:1;border:0;background:transparent;padding:9px 6px;border-radius:999px;font:inherit;font-weight:600;color:var(--ink)}
+.seg button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.card{background:var(--card);border-radius:20px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+body.hasWp .card,body.hasWp .seg{background:rgba(255,255,255,.82);backdrop-filter:blur(6px)}
+.task{display:flex;align-items:center;gap:12px}
+.task .tx{flex:1;min-width:0}
+.task .t{font-weight:600;word-break:break-word}
+.task.done .t{text-decoration:line-through;opacity:.55}
+.chk{width:26px;height:26px;border-radius:8px;border:2px solid #111;background:transparent;flex:none;display:grid;place-items:center;padding:0}
+.chk.on{background:#111;color:#fff}
+.pill{font-size:12px;font-weight:600;background:#111;color:#fff;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.note{min-height:110px;margin:0;cursor:pointer}
+.note b{display:block;margin-bottom:4px}
+.note p{margin:0;font-size:14px;color:var(--soft);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap}
+.bar{height:10px;border-radius:99px;background:rgba(0,0,0,.1);overflow:hidden;margin:10px 0 6px}
+.bar i{display:block;height:100%;background:#111;border-radius:99px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.btn{border:0;border-radius:14px;padding:10px 16px;font:inherit;font-weight:600;background:#111;color:#fff}
+.btn.alt{background:rgba(0,0,0,.08);color:#111}
+.btn.danger{background:#b3261e}
+.btn.sm{padding:6px 12px;font-size:14px;border-radius:10px}
+.empty{text-align:center;color:var(--soft);padding:40px 10px}
+nav{position:fixed;inset-inline:0;bottom:max(12px,env(safe-area-inset-bottom));display:flex;justify-content:center;pointer-events:none}
+nav .bar2{pointer-events:auto;display:flex;align-items:center;gap:4px;background:#fff;border-radius:28px;padding:8px 10px;box-shadow:0 4px 18px rgba(0,0,0,.18);width:min(92vw,520px);justify-content:space-around}
+nav button{border:0;background:transparent;width:48px;height:48px;border-radius:16px;display:grid;place-items:center;color:#111}
+nav button.on{background:var(--ac)}
+nav button.fab{background:#111;color:#fff;width:56px;height:56px;border-radius:50%;margin-top:-26px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#modal,#pad{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:20}
+#modal.show,#pad.show{display:flex}
+.sheet{background:#fff;width:min(100%,560px);border-radius:24px 24px 0 0;padding:18px 18px max(18px,env(safe-area-inset-bottom));max-height:90vh;overflow:auto}
+label{display:block;font-size:13px;font-weight:600;margin:10px 0 4px}
+input,textarea,select{width:100%;font:inherit;color:#111;background:#f2f2f2;border:2px solid transparent;border-radius:14px;padding:10px 12px;outline:none}
+input:focus,textarea:focus,select:focus{border-color:#111}
+textarea{min-height:200px;resize:vertical}
+.actions{display:flex;gap:8px;margin-top:16px}
+.actions .btn{flex:1}
+.sw{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0}
+.sw button{width:42px;height:42px;border-radius:50%;border:3px solid transparent}
+.sw button.on{border-color:#111}
+#pad{background:#16161c;align-items:center;color:#fff;flex-direction:column;justify-content:center;gap:16px}
+#pad .dots{display:flex;gap:14px;margin:6px 0 14px}
+#pad .dots i{width:14px;height:14px;border-radius:50%;border:2px solid #f3d98b}
+#pad .dots i.f{background:#f3d98b}
+#pad .keys{display:grid;grid-template-columns:repeat(3,72px);gap:14px}
+#pad .keys button{height:72px;border-radius:50%;border:0;background:#2a2a33;color:#fff;font:600 26px 'Cairo'}
+#pad .x{background:transparent;border:0;color:#aaa;font:inherit;margin-top:6px}
+@keyframes sh{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.shake{animation:sh .35s}
+#toast{position:fixed;inset-inline:0;bottom:100px;text-align:center;pointer-events:none;z-index:30}
+#toast span{background:#111;color:#fff;padding:9px 16px;border-radius:99px;font-size:14px;display:inline-block}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal"></div>
+<div id="pad"></div>
+<div id="toast"></div>
+<input type="file" id="fileWp" accept="image/*" hidden>
+<input type="file" id="fileImp" accept="application/json" hidden>
+<script>
+const T={
+ar:{tasks:'المهام',notes:'ملاحظات',goals:'أهداف',settings:'الإعدادات',today:'اليوم',upcoming:'القادمة',done:'منجزة',
+ noTasks:'ما فما حتى مهمة هنا',noNotes:'ما فما حتى ملاحظة',noGoals:'ما فما حتى هدف',newTask:'مهمة جديدة',editTask:'تعديل المهمة',
+ taskText:'شنوة المهمة؟',date:'التاريخ',time:'الوقت (تذكير)',save:'حفظ',cancel:'إلغاء',del:'حذف',newNote:'ملاحظة جديدة',title:'العنوان',
+ body:'اكتب شي...',lock:'قفل الملاحظة',locked:'ملاحظة مقفولة',newGoal:'هدف جديد',goalTitle:'اسم الهدف',habit:'عادة يومية',target:'رقم نستهدفو',
+ targetVal:'الهدف',current:'الحالي',streak:'يوم متتالي',checkin:'تمّت اليوم',undo:'تراجع',lang:'اللغة',theme:'الألوان',wallpaper:'صورة الخلفية',
+ chooseImg:'اختار صورة',remove:'إزالة',pin:'رمز القفل (PIN)',setPin:'تفعيل',removePin:'إلغاء',enterPin:'أدخل الرمز',newPin:'اختار رمز من 4 أرقام',
+ confirmPin:'أعد إدخال الرمز',wrongPin:'الرمز غالط',noMatch:'الرمزين موش كيف كيف',notif:'التذكيرات',enableNotif:'تفعيل الإشعارات',
+ backup:'نسخة احتياطية',exportB:'تصدير',importB:'استيراد',saved:'تمّ الحفظ',setPinFirst:'فعّل رمز القفل من الإعدادات أولا',
+ remind:'تذكير',storageFull:'الذاكرة عامرة، جرّب صورة أصغر',imported:'تم الاستيراد',notifOn:'الإشعارات مفعّلة',notifOff:'الإشعارات مرفوضة من المتصفح',
+ remNote:'التذكيرات تخدم كي يكون التطبيق مفتوح أو في الخلفية.',unlock:'فتح'},
+en:{tasks:'Tasks',notes:'Notes',goals:'Goals',settings:'Settings',today:'Today',upcoming:'Upcoming',done:'Done',
+ noTasks:'No tasks here',noNotes:'No notes yet',noGoals:'No goals yet',newTask:'New task',editTask:'Edit task',
+ taskText:'What needs doing?',date:'Date',time:'Time (reminder)',save:'Save',cancel:'Cancel',del:'Delete',newNote:'New note',title:'Title',
+ body:'Write something...',lock:'Lock note',locked:'Locked note',newGoal:'New goal',goalTitle:'Goal name',habit:'Daily habit',target:'Number target',
+ targetVal:'Target',current:'Current',streak:'day streak',checkin:'Done today',undo:'Undo',lang:'Language',theme:'Colors',wallpaper:'Wallpaper',
+ chooseImg:'Choose image',remove:'Remove',pin:'Lock PIN',setPin:'Turn on',removePin:'Turn off',enterPin:'Enter PIN',newPin:'Choose a 4-digit PIN',
+ confirmPin:'Repeat the PIN',wrongPin:'Wrong PIN',noMatch:"PINs don't match",notif:'Reminders',enableNotif:'Enable notifications',
+ backup:'Backup',exportB:'Export',importB:'Import',saved:'Saved',setPinFirst:'Set a PIN in Settings first',
+ remind:'Reminder',storageFull:'Storage is full, try a smaller image',imported:'Imported',notifOn:'Notifications are on',notifOff:'Notifications were blocked',
+ remNote:'Reminders work while the app is open or in the background.',unlock:'Unlock'}
+};
+const THEMES={sage:['#e4f0e6','#f4faf5','#9cc9a8'],sky:['#e3edf7','#f4f8fc','#9dbfe0'],sand:['#f6efdc','#fcf8ec','#e3cf8f'],lavender:['#ebe6f5','#f7f4fc','#bfb2e0'],peach:['#fbe9e1','#fef6f2','#f0b9a1']};
+const PASTEL=['#dbe9f7','#d6efe3','#e6defa','#fbeab8'];
+const IC={
+ tasks:'<path d="M9 11l3 3 7-7"/><rect x="3" y="3" width="18" height="18" rx="5"/>',
+ notes:'<path d="M5 4h10l4 4v12H5z"/><path d="M9 12h6M9 16h4"/>',
+ goals:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>',
+ settings:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>',lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',
+ check:'<path d="M5 12l5 5 9-10"/>'
+};
+const svg=n=>'<svg class="i" viewBox="0 0 24 24">'+IC[n]+'</svg>';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const DEF=()=>({lang:'ar',theme:'sage',wp:'',pin:'',tasks:[],notes:[],goals:[]});
+function load(){try{return Object.assign(DEF(),JSON.parse(localStorage.getItem('hadyr-app')||'{}'))}catch(e){return DEF()}}
+let S=load(),tab='tasks',filter='today',unlocked=false;
+const t=k=>(T[S.lang]&&T[S.lang][k])||k;
+function save(){try{localStorage.setItem('hadyr-app',JSON.stringify(S))}catch(e){toast(t('storageFull'))}}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const z=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());
+function toast(m){const e=$('#toast');e.innerHTML='<span>'+esc(m)+'</span>';clearTimeout(toast.t);toast.t=setTimeout(()=>e.innerHTML='',2200)}
+async function H(p){try{if(window.crypto&&crypto.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('hadyr'+p));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')}}catch(e){}return 'p'+p}
+
+function applyTheme(){
+ const th=THEMES[S.theme]||THEMES.sage,r=document.documentElement.style;
+ r.setProperty('--bg',th[0]);r.setProperty('--card',th[1]);r.setProperty('--ac',th[2]);
+ r.setProperty('--wp',S.wp?'url('+S.wp+')':'none');
+ document.body.classList.toggle('hasWp',!!S.wp);
+ document.querySelector('meta[name=theme-color]').content=th[0];
+ document.documentElement.lang=S.lang;document.documentElement.dir=S.lang==='ar'?'rtl':'ltr';
+}
+function streak(g){
+ const set=new Set(g.days||[]);let d=new Date(),n=0;
+ if(!set.has(ymd(d)))d.setDate(d.getDate()-1);
+ while(set.has(ymd(d))){n++;d.setDate(d.getDate()-1)}return n;
+}
+function taskBucket(x){const td=ymd(new Date());if(x.done)return'done';if(x.date&&x.date>td)return'upcoming';return'today'}
+function fmtDate(s){if(!s)return'';const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString(S.lang==='ar'?'ar-TN':'en-GB',{weekday:'short',day:'numeric',month:'short'})}
+
+function header(){
+ const brand=S.lang==='ar'?'<span class="heart">♥</span><span class="name-ar">هدير</span><span class="heart">♥</span>':'<span class="heart">♥</span><span class="name-en">hadyr</span><span class="heart">♥</span>';
+ return '<header><div><div class="brand">'+brand+'</div><div class="sub">'+esc(new Date().toLocaleDateString(S.lang==='ar'?'ar-TN':'en-GB',{weekday:'long',day:'numeric',month:'long'}))+'</div></div></header>';
+}
+function vTasks(){
+ const list=S.tasks.filter(x=>taskBucket(x)===filter).sort((a,b)=>((a.date||'')+(a.time||'')).localeCompare((b.date||'')+(b.time||'')));
+ let h='<div class="seg">'+['today','upcoming','done'].map(f=>'<button data-a="filter" data-v="'+f+'" class="'+(filter===f?'on':'')+'">'+t(f)+'</button>').join('')+'</div>';
+ if(!list.length)return h+'<div class="empty">'+t('noTasks')+'</div>';
+ return h+list.map((x,i)=>'<div class="card task'+(x.done?' done':'')+'" style="background:'+PASTEL[i%4]+'"><button class="chk'+(x.done?' on':'')+'" data-a="toggle" data-v="'+x.id+'">'+(x.done?svg('check'):'')+'</button><div class="tx" data-a="editTask" data-v="'+x.id+'"><div class="t">'+esc(x.text)+'</div>'+(x.date?'<div class="sub">'+esc(fmtDate(x.date))+'</div>':'')+'</div>'+(x.time?'<span class="pill">'+esc(x.time)+'</span>':'')+'</div>').join('');
+}
+function vNotes(){
+ if(!S.notes.length)return '<div class="empty">'+t('noNotes')+'</div>';
+ return '<div class="grid">'+S.notes.map((n,i)=>'<div class="card note" data-a="openNote" data-v="'+n.id+'" style="background:'+PASTEL[(i+1)%4]+'"><b>'+esc(n.title||'')+(n.locked?' '+svg('lock').replace('class="i"','class="i" style="width:16px;height:16px;vertical-align:-2px"'):'')+'</b>'+(n.locked?'<p>'+t('locked')+'</p>':'<p>'+esc(n.body)+'</p>')+'</div>').join('')+'</div>';
+}
+function vGoals(){
+ if(!S.goals.length)return '<div class="empty">'+t('noGoals')+'</div>';
+ return S.goals.map((g,i)=>{
+  const bg='background:'+PASTEL[(i+2)%4];
+  if(g.type==='habit'){
+   const on=(g.days||[]).includes(ymd(new Date()));
+   return '<div class="card" style="'+bg+'"><div class="row"><b data-a="editGoal" data-v="'+g.id+'">'+esc(g.title)+'</b><span class="pill">'+streak(g)+' '+t('streak')+'</span></div><div class="actions"><button class="btn'+(on?' alt':'')+'" data-a="checkin" data-v="'+g.id+'">'+(on?t('undo'):t('checkin'))+'</button></div></div>';
+  }
+  const pct=g.target>0?Math.min(100,Math.round(g.current/g.target*100)):0;
+  return '<div class="card" style="'+bg+'"><div class="row"><b data-a="editGoal" data-v="'+g.id+'">'+esc(g.title)+'</b><span class="pill">'+pct+'%</span></div><div class="bar"><i style="width:'+pct+'%"></i></div><div class="row"><span class="sub">'+esc(g.current)+' / '+esc(g.target)+'</span><span><button class="btn sm alt" data-a="dec" data-v="'+g.id+'">−1</button> <button class="btn sm" data-a="inc" data-v="'+g.id+'">+1</button></span></div></div>';
+ }).join('');
+}
+function vSettings(){
+ const sw=Object.keys(THEMES).map(k=>'<button data-a="theme" data-v="'+k+'" class="'+(S.theme===k?'on':'')+'" style="background:'+THEMES[k][2]+'"></button>').join('');
+ return '<div class="card"><label>'+t('lang')+'</label><div class="seg" style="margin:0"><button data-a="lang" data-v="ar" class="'+(S.lang==='ar'?'on':'')+'">العربية</button><button data-a="lang" data-v="en" class="'+(S.lang==='en'?'on':'')+'">English</button></div></div>'
+ +'<div class="card"><label>'+t('theme')+'</label><div class="sw">'+sw+'</div></div>'
+ +'<div class="card"><label>'+t('wallpaper')+'</label><div class="actions" style="margin-top:6px"><button class="btn" data-a="wp">'+t('chooseImg')+'</button>'+(S.wp?'<button class="btn alt" data-a="wpdel">'+t('remove')+'</button>':'')+'</div></div>'
+ +'<div class="card"><label>'+t('pin')+'</label><div class="actions" style="margin-top:6px">'+(S.pin?'<button class="btn alt" data-a="pindel">'+t('removePin')+'</button>':'<button class="btn" data-a="pinset">'+t('setPin')+'</button>')+'</div></div>'
+ +'<div class="card"><label>'+t('notif')+'</label><div class="sub">'+t('remNote')+'</div><div class="actions"><button class="btn" data-a="notif">'+t('enableNotif')+'</button></div></div>'
+ +'<div class="card"><label>'+t('backup')+'</label><div class="actions" style="margin-top:6px"><button class="btn alt" data-a="export">'+t('exportB')+'</button><button class="btn alt" data-a="import">'+t('importB')+'</button></div></div>';
+}
+function nav(){
+ const b=(k)=>'<button data-a="tab" data-v="'+k+'" class="'+(tab===k?'on':'')+'" aria-label="'+t(k)+'">'+svg(k)+'</button>';
+ return '<nav><div class="bar2">'+b('tasks')+b('notes')+'<button class="fab" data-a="add" aria-label="+">'+svg('plus')+'</button>'+b('goals')+b('settings')+'</div></nav>';
+}
+function render(){
+ applyTheme();
+ const views={tasks:vTasks,notes:vNotes,goals:vGoals,settings:vSettings};
+ $('#app').innerHTML=header()+'<h2>'+t(tab)+'</h2>'+views[tab]()+nav();
+}
+
+function modal(html){const m=$('#modal');m.innerHTML='<div class="sheet">'+html+'</div>';m.classList.add('show')}
+function closeModal(){const m=$('#modal');m.classList.remove('show');m.innerHTML=''}
+const acts=(save,del)=>'<div class="actions"><button class="btn alt" data-a="close">'+t('cancel')+'</button>'+(del?'<button class="btn danger" data-a="'+del+'">'+t('del')+'</button>':'')+'<button class="btn" data-a="'+save+'">'+t('save')+'</button></div>';
+let editing=null;
+
+function taskModal(id){
+ editing=id;const x=S.tasks.find(a=>a.id===id)||{text:'',date:'',time:''};
+ modal('<h2>'+t(id?'editTask':'newTask')+'</h2><label>'+t('taskText')+'</label><input id="f_text" value="'+esc(x.text)+'"><label>'+t('date')+'</label><input id="f_date" type="date" value="'+esc(x.date||'')+'"><label>'+t('time')+'</label><input id="f_time" type="time" value="'+esc(x.time||'')+'">'+acts('saveTask',id?'delTask':''));
+ setTimeout(()=>{const e=$('#f_text');if(e&&!id)e.focus()},50);
+}
+function saveTask(){
+ const text=$('#f_text').value.trim();if(!text)return;
+ const o={text,date:$('#f_date').value,time:$('#f_time').value,notified:false};
+ if(editing){Object.assign(S.tasks.find(a=>a.id===editing),o)}else S.tasks.push(Object.assign({id:uid(),done:false},o));
+ save();closeModal();render();
+}
+function noteModal(id){
+ editing=id;const n=S.notes.find(a=>a.id===id)||{title:'',body:'',locked:false};
+ modal('<h2>'+t(id?'notes':'newNote')+'</h2><label>'+t('title')+'</label><input id="f_title" value="'+esc(n.title)+'"><label>'+t('body')+'</label><textarea id="f_body">'+esc(n.body)+'</textarea><label style="display:flex;gap:8px;align-items:center"><input id="f_lock" type="checkbox" style="width:auto" '+(n.locked?'checked':'')+'>'+t('lock')+'</label>'+acts('saveNote',id?'delNote':''));
+}
+function saveNote(){
+ const title=$('#f_title').value.trim(),body=$('#f_body').value,locked=$('#f_lock').checked;
+ if(locked&&!S.pin){toast(t('setPinFirst'));return}
+ if(!title&&!body.trim())return;
+ if(editing){Object.assign(S.notes.find(a=>a.id===editing),{title,body,locked})}else S.notes.unshift({id:uid(),title,body,locked});
+ save();closeModal();render();
+}
+function goalModal(id){
+ editing=id;const g=S.goals.find(a=>a.id===id)||{title:'',type:'habit',target:10,current:0};
+ modal('<h2>'+t(id?'goals':'newGoal')+'</h2><label>'+t('goalTitle')+'</label><input id="f_title" value="'+esc(g.title)+'"><label>&nbsp;</label><select id="f_type"><option value="habit"'+(g.type==='habit'?' selected':'')+'>'+t('habit')+'</option><option value="target"'+(g.type==='target'?' selected':'')+'>'+t('target')+'</option></select><div id="tg" style="'+(g.type==='target'?'':'display:none')+'"><label>'+t('targetVal')+'</label><input id="f_target" type="number" min="1" value="'+esc(g.target)+'"><label>'+t('current')+'</label><input id="f_cur" type="number" min="0" value="'+esc(g.current)+'"></div>'+acts('saveGoal',id?'delGoal':''));
+ $('#f_type').onchange=e=>{$('#tg').style.display=e.target.value==='target'?'':'none'};
+}
+function saveGoal(){
+ const title=$('#f_title').value.trim();if(!title)return;
+ const type=$('#f_type').value,o={title,type,target:Math.max(1,+$('#f_target').value||1),current:Math.max(0,+$('#f_cur').value||0)};
+ if(editing)Object.assign(S.goals.find(a=>a.id===editing),o);else S.goals.push(Object.assign({id:uid(),days:[]},o));
+ save();closeModal();render();
+}
+
+function pinPad(title,cb,cancellable){
+ const p=$('#pad');let v='';
+ const draw=()=>{p.innerHTML='<div style="font-weight:800;font-size:20px">'+esc(title)+'</div><div class="dots">'+[0,1,2,3].map(i=>'<i class="'+(i<v.length?'f':'')+'"></i>').join('')+'</div><div class="keys">'+[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(k=>k===''?'<span></span>':'<button data-k="'+k+'">'+k+'</button>').join('')+'</div>'+(cancellable?'<button class="x" data-k="x">'+t('cancel')+'</button>':'');p.classList.add('show')};
+ p.onclick=async e=>{
+  const b=e.target.closest('[data-k]');if(!b)return;const k=b.dataset.k;
+  if(k==='x'){p.classList.remove('show');p.onclick=null;return}
+  if(k==='⌫')v=v.slice(0,-1);else if(v.length<4)v+=k;
+  draw();
+  if(v.length===4){
+   const ok=await cb(v);
+   if(ok){p.classList.remove('show');p.onclick=null}
+   else{v='';draw();p.classList.add('shake');setTimeout(()=>p.classList.remove('shake'),400)}
+  }
+ };
+ draw();
+}
+function askPin(cb,cancellable){
+ pinPad(t('enterPin'),async v=>{if((await H(v))===S.pin){cb();return true}toast(t('wrongPin'));return false},cancellable);
+}
+function setPinFlow(){
+ pinPad(t('newPin'),async v1=>{
+  setTimeout(()=>pinPad(t('confirmPin'),async v2=>{
+   if(v1!==v2){toast(t('noMatch'));return false}
+   S.pin=await H(v1);unlocked=true;save();toast(t('saved'));render();return true;
+  },true),50);
+  return true;
+ },true);
+}
+
+async function checkReminders(){
+ const now=new Date(),td=ymd(now),hm=z(now.getHours())+':'+z(now.getMinutes());let ch=false;
+ for(const x of S.tasks){
+  if(x.done||x.notified||!x.time)continue;
+  const d=x.date||td;
+  if(d<td||(d===td&&x.time<=hm)){
+   x.notified=true;ch=true;toast('🔔 '+x.text);
+   try{
+    if('Notification' in window&&Notification.permission==='granted'){
+     const reg=await navigator.serviceWorker.ready;
+     reg.showNotification('hadyr ♥',{body:x.text,icon:'icon.svg',tag:x.id,vibrate:[120,60,120]});
+    }
+   }catch(e){}
+  }
+ }
+ if(ch){save();render()}
+}
+
+document.addEventListener('click',async e=>{
+ const el=e.target.closest('[data-a]');if(!el||el.closest('#pad'))return;
+ const a=el.dataset.a,v=el.dataset.v;
+ switch(a){
+  case 'tab':tab=v;render();break;
+  case 'filter':filter=v;render();break;
+  case 'add':if(tab==='notes')noteModal();else if(tab==='goals')goalModal();else taskModal();break;
+  case 'toggle':{const x=S.tasks.find(q=>q.id===v);x.done=!x.done;save();render();break}
+  case 'editTask':taskModal(v);break;
+  case 'saveTask':saveTask();break;
+  case 'delTask':S.tasks=S.tasks.filter(q=>q.id!==editing);save();closeModal();render();break;
+  case 'openNote':{const n=S.notes.find(q=>q.id===v);if(n.locked)askPin(()=>noteModal(v),true);else noteModal(v);break}
+  case 'saveNote':saveNote();break;
+  case 'delNote':S.notes=S.notes.filter(q=>q.id!==editing);save();closeModal();render();break;
+  case 'editGoal':goalModal(v);break;
+  case 'saveGoal':saveGoal();break;
+  case 'delGoal':S.goals=S.goals.filter(q=>q.id!==editing);save();closeModal();render();break;
+  case 'checkin':{const g=S.goals.find(q=>q.id===v),d=ymd(new Date());g.days=g.days||[];g.days=g.days.includes(d)?g.days.filter(q=>q!==d):g.days.concat(d);save();render();break}
+  case 'inc':{const g=S.goals.find(q=>q.id===v);g.current++;save();render();break}
+  case 'dec':{const g=S.goals.find(q=>q.id===v);g.current=Math.max(0,g.current-1);save();render();break}
+  case 'close':closeModal();break;
+  case 'lang':S.lang=v;save();render();break;
+  case 'theme':S.theme=v;save();render();break;
+  case 'wp':$('#fileWp').click();break;
+  case 'wpdel':S.wp='';save();render();break;
+  case 'pinset':setPinFlow();break;
+  case 'pindel':askPin(()=>{S.pin='';S.notes.forEach(n=>n.locked=false);save();render()},true);break;
+  case 'notif':
+   if(!('Notification' in window)){toast(t('notifOff'));break}
+   toast((await Notification.requestPermission())==='granted'?t('notifOn'):t('notifOff'));break;
+  case 'export':{const b=new Blob([JSON.stringify(S)],{type:'application/json'}),u=URL.createObjectURL(b),l=document.createElement('a');l.href=u;l.download='hadyr-backup-'+ymd(new Date())+'.json';l.click();setTimeout(()=>URL.revokeObjectURL(u),2000);break}
+  case 'import':$('#fileImp').click();break;
+ }
+});
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+$('#fileWp').addEventListener('change',e=>{
+ const f=e.target.files[0];if(!f)return;
+ const img=new Image(),u=URL.createObjectURL(f);
+ img.onload=()=>{
+  const r=Math.min(1,900/Math.max(img.width,img.height)),c=document.createElement('canvas');
+  c.width=Math.round(img.width*r);c.height=Math.round(img.height*r);
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  S.wp=c.toDataURL('image/jpeg',.7);URL.revokeObjectURL(u);save();render();
+ };
+ img.src=u;e.target.value='';
+});
+$('#fileImp').addEventListener('change',e=>{
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{try{S=Object.assign(DEF(),JSON.parse(r.result));save();render();toast(t('imported'))}catch(x){}};
+ r.readAsText(f);e.target.value='';
+});
+
+render();
+if(S.pin&&!unlocked)askPin(()=>{unlocked=true},false);
+setInterval(checkReminders,30000);checkReminders();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
