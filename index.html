@@ -76,6 +76,14 @@ textarea{min-height:200px;resize:vertical}
 #pad .x{background:transparent;border:0;color:#aaa;font:inherit;margin-top:6px}
 @keyframes sh{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
 .shake{animation:sh .35s}
+.grid2{border-collapse:collapse;direction:ltr}
+.grid2 th{background:#f2f2f2;font-size:12px;padding:4px 8px;font-weight:600;color:#444;position:sticky;top:0}
+.grid2 tbody th{position:static;min-width:28px}
+.grid2 td{padding:0;border:1px solid #e3e3e3}
+.grid2 input{border-radius:0;background:#fff;width:92px;min-width:92px;padding:9px 8px;font-size:14px;border:0;text-align:left;direction:ltr}
+.grid2 input:focus{background:#eef6ff;outline:2px solid #111;outline-offset:-2px}
+nav button{width:44px;height:44px}
+nav button.fab{width:56px;height:56px}
 #toast{position:fixed;inset-inline:0;bottom:100px;text-align:center;pointer-events:none;z-index:30}
 #toast span{background:#111;color:#fff;padding:9px 16px;border-radius:99px;font-size:14px;display:inline-block}
 </style>
@@ -98,7 +106,7 @@ ar:{tasks:'المهام',notes:'ملاحظات',goals:'أهداف',settings:'ا�
  confirmPin:'أعد إدخال الرمز',wrongPin:'الرمز غالط',noMatch:'الرمزين موش كيف كيف',notif:'التذكيرات',enableNotif:'تفعيل الإشعارات',
  backup:'نسخة احتياطية',exportB:'تصدير',importB:'استيراد',saved:'تمّ الحفظ',setPinFirst:'فعّل رمز القفل من الإعدادات أولا',
  remind:'تذكير',storageFull:'الذاكرة عامرة، جرّب صورة أصغر',imported:'تم الاستيراد',notifOn:'الإشعارات مفعّلة',notifOff:'الإشعارات مرفوضة من المتصفح',
- remNote:'التذكيرات تخدم كي يكون التطبيق مفتوح أو في الخلفية.',unlock:'فتح'},
+ remNote:'التذكيرات تخدم كي يكون التطبيق مفتوح أو في الخلفية.',unlock:'فتح',sheets:'جداول',noSheets:'ما فما حتى جدول',newSheet:'جدول جديد',sheetName:'اسم الجدول',addRow:'+ سطر',addCol:'+ عمود',sheetHint:'اكتب = للمعادلات، مثلا =SUM(A1:A5)',addCal:'إضافة للتقويم (تذكير قوي)',calHint:'افتح الملف الي نزل باش يتزاد في التقويم'},
 en:{tasks:'Tasks',notes:'Notes',goals:'Goals',settings:'Settings',today:'Today',upcoming:'Upcoming',done:'Done',
  noTasks:'No tasks here',noNotes:'No notes yet',noGoals:'No goals yet',newTask:'New task',editTask:'Edit task',
  taskText:'What needs doing?',date:'Date',time:'Time (reminder)',save:'Save',cancel:'Cancel',del:'Delete',newNote:'New note',title:'Title',
@@ -108,7 +116,7 @@ en:{tasks:'Tasks',notes:'Notes',goals:'Goals',settings:'Settings',today:'Today',
  confirmPin:'Repeat the PIN',wrongPin:'Wrong PIN',noMatch:"PINs don't match",notif:'Reminders',enableNotif:'Enable notifications',
  backup:'Backup',exportB:'Export',importB:'Import',saved:'Saved',setPinFirst:'Set a PIN in Settings first',
  remind:'Reminder',storageFull:'Storage is full, try a smaller image',imported:'Imported',notifOn:'Notifications are on',notifOff:'Notifications were blocked',
- remNote:'Reminders work while the app is open or in the background.',unlock:'Unlock'}
+ remNote:'Reminders work while the app is open or in the background.',unlock:'Unlock',sheets:'Sheets',noSheets:'No sheets yet',newSheet:'New sheet',sheetName:'Sheet name',addRow:'+ Row',addCol:'+ Column',sheetHint:'Type = for formulas, e.g. =SUM(A1:A5)',addCal:'Add to calendar (strong reminder)',calHint:'Open the downloaded file to add it to your calendar'}
 };
 const THEMES={sage:['#e4f0e6','#f4faf5','#9cc9a8'],sky:['#e3edf7','#f4f8fc','#9dbfe0'],sand:['#f6efdc','#fcf8ec','#e3cf8f'],lavender:['#ebe6f5','#f7f4fc','#bfb2e0'],peach:['#fbe9e1','#fef6f2','#f0b9a1']};
 const PASTEL=['#dbe9f7','#d6efe3','#e6defa','#fbeab8'];
@@ -117,13 +125,13 @@ const IC={
  notes:'<path d="M5 4h10l4 4v12H5z"/><path d="M9 12h6M9 16h4"/>',
  goals:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>',
  settings:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
- plus:'<path d="M12 5v14M5 12h14"/>',lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',
+ sheets:'<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 10h18M3 15h18M9 4v16"/>',plus:'<path d="M12 5v14M5 12h14"/>',lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',
  check:'<path d="M5 12l5 5 9-10"/>'
 };
 const svg=n=>'<svg class="i" viewBox="0 0 24 24">'+IC[n]+'</svg>';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const DEF=()=>({lang:'ar',theme:'sage',wp:'',pin:'',tasks:[],notes:[],goals:[]});
+const DEF=()=>({lang:'ar',theme:'sage',wp:'',pin:'',tasks:[],notes:[],goals:[],sheets:[]});
 function load(){try{return Object.assign(DEF(),JSON.parse(localStorage.getItem('hadyr-app')||'{}'))}catch(e){return DEF()}}
 let S=load(),tab='tasks',filter='today',unlocked=false;
 const t=k=>(T[S.lang]&&T[S.lang][k])||k;
@@ -176,6 +184,10 @@ function vGoals(){
   return '<div class="card" style="'+bg+'"><div class="row"><b data-a="editGoal" data-v="'+g.id+'">'+esc(g.title)+'</b><span class="pill">'+pct+'%</span></div><div class="bar"><i style="width:'+pct+'%"></i></div><div class="row"><span class="sub">'+esc(g.current)+' / '+esc(g.target)+'</span><span><button class="btn sm alt" data-a="dec" data-v="'+g.id+'">−1</button> <button class="btn sm" data-a="inc" data-v="'+g.id+'">+1</button></span></div></div>';
  }).join('');
 }
+function vSheets(){
+ if(!S.sheets.length)return '<div class="empty">'+t('noSheets')+'</div>';
+ return '<div class="grid">'+S.sheets.map((s,i)=>'<div class="card note" data-a="openSheet" data-v="'+s.id+'" style="background:'+PASTEL[i%4]+'"><b>'+esc(s.title||t('newSheet'))+'</b><p>'+s.rows+' × '+s.cols+'</p></div>').join('')+'</div>';
+}
 function vSettings(){
  const sw=Object.keys(THEMES).map(k=>'<button data-a="theme" data-v="'+k+'" class="'+(S.theme===k?'on':'')+'" style="background:'+THEMES[k][2]+'"></button>').join('');
  return '<div class="card"><label>'+t('lang')+'</label><div class="seg" style="margin:0"><button data-a="lang" data-v="ar" class="'+(S.lang==='ar'?'on':'')+'">العربية</button><button data-a="lang" data-v="en" class="'+(S.lang==='en'?'on':'')+'">English</button></div></div>'
@@ -187,11 +199,11 @@ function vSettings(){
 }
 function nav(){
  const b=(k)=>'<button data-a="tab" data-v="'+k+'" class="'+(tab===k?'on':'')+'" aria-label="'+t(k)+'">'+svg(k)+'</button>';
- return '<nav><div class="bar2">'+b('tasks')+b('notes')+'<button class="fab" data-a="add" aria-label="+">'+svg('plus')+'</button>'+b('goals')+b('settings')+'</div></nav>';
+ return '<nav><div class="bar2">'+b('tasks')+b('notes')+b('sheets')+'<button class="fab" data-a="add" aria-label="+">'+svg('plus')+'</button>'+b('goals')+b('settings')+'</div></nav>';
 }
 function render(){
  applyTheme();
- const views={tasks:vTasks,notes:vNotes,goals:vGoals,settings:vSettings};
+ const views={tasks:vTasks,notes:vNotes,sheets:vSheets,goals:vGoals,settings:vSettings};
  $('#app').innerHTML=header()+'<h2>'+t(tab)+'</h2>'+views[tab]()+nav();
 }
 
@@ -202,7 +214,7 @@ let editing=null;
 
 function taskModal(id){
  editing=id;const x=S.tasks.find(a=>a.id===id)||{text:'',date:'',time:''};
- modal('<h2>'+t(id?'editTask':'newTask')+'</h2><label>'+t('taskText')+'</label><input id="f_text" value="'+esc(x.text)+'"><label>'+t('date')+'</label><input id="f_date" type="date" value="'+esc(x.date||'')+'"><label>'+t('time')+'</label><input id="f_time" type="time" value="'+esc(x.time||'')+'">'+acts('saveTask',id?'delTask':''));
+ modal('<h2>'+t(id?'editTask':'newTask')+'</h2><label>'+t('taskText')+'</label><input id="f_text" value="'+esc(x.text)+'"><label>'+t('date')+'</label><input id="f_date" type="date" value="'+esc(x.date||'')+'"><label>'+t('time')+'</label><input id="f_time" type="time" value="'+esc(x.time||'')+'"><button class="btn alt" data-a="addCal" style="width:100%;margin-top:12px">'+t('addCal')+'</button>'+acts('saveTask',id?'delTask':''));
  setTimeout(()=>{const e=$('#f_text');if(e&&!id)e.focus()},50);
 }
 function saveTask(){
@@ -263,6 +275,69 @@ function setPinFlow(){
  },true);
 }
 
+const colName=i=>String.fromCharCode(65+i);
+function evalCell(sh,r,c,stack){
+ const raw=(sh.data[r]&&sh.data[r][c])||'';
+ if(raw[0]!=='='){if(raw.trim()==='')return '';return isNaN(+raw)?raw:+raw}
+ const key=r+','+c;if(stack.has(key))return '#CYCLE';
+ stack.add(key);
+ try{const v=calc(raw.slice(1),sh,stack);stack.delete(key);return v}catch(e){stack.delete(key);return '#ERR'}
+}
+function calc(src,sh,stack){
+ const toks=src.toUpperCase().match(/[A-Z]+\d+:[A-Z]+\d+|[A-Z]+\d+|[A-Z]+(?=\()|\d*\.?\d+|[()+\-*\/,]/g)||[];
+ let p=0;const peek=()=>toks[p],next=()=>toks[p++];
+ const num=v=>{if(typeof v==='number')return v;if(v===''||v==null)return 0;const n=+v;if(isNaN(n))throw 0;return n};
+ const ref=t=>{const m=/^([A-Z]+)(\d+)$/.exec(t);return [+m[2]-1,m[1].charCodeAt(0)-65]};
+ const range=t=>{const q=t.split(':'),a=ref(q[0]),b=ref(q[1]),out=[];for(let r=Math.min(a[0],b[0]);r<=Math.max(a[0],b[0]);r++)for(let c=Math.min(a[1],b[1]);c<=Math.max(a[1],b[1]);c++)out.push(evalCell(sh,r,c,stack));return out};
+ function expr(){let v=term();while(peek()==='+'||peek()==='-'){const o=next(),w=term();v=o==='+'?v+w:v-w}return v}
+ function term(){let v=unary();while(peek()==='*'||peek()==='/'){const o=next(),w=unary();if(o==='/'&&w===0)throw 0;v=o==='*'?v*w:v/w}return v}
+ function unary(){if(peek()==='-'){next();return -unary()}if(peek()==='+'){next();return unary()}return atom()}
+ function atom(){
+  const t=next();if(t===undefined)throw 0;
+  if(t==='('){const v=expr();if(next()!==')')throw 0;return v}
+  if(/^\d/.test(t)||t[0]==='.')return +t;
+  if(t.indexOf(':')>-1)throw 0;
+  if(/^[A-Z]+\d+$/.test(t)){const q=ref(t);return num(evalCell(sh,q[0],q[1],stack))}
+  if(next()!=='(')throw 0;
+  const args=[];
+  if(peek()!==')'){do{if(peek()===',')next();const a=peek();if(a&&a.indexOf(':')>-1){next();range(a).forEach(x=>args.push(x))}else args.push(expr())}while(peek()===',')}
+  if(next()!==')')throw 0;
+  const ns=args.filter(x=>x!==''&&!isNaN(+x)).map(Number);
+  switch(t){
+   case 'SUM':return ns.reduce((a,b)=>a+b,0);
+   case 'AVERAGE':case 'AVG':return ns.length?ns.reduce((a,b)=>a+b,0)/ns.length:0;
+   case 'MIN':return ns.length?Math.min.apply(null,ns):0;
+   case 'MAX':return ns.length?Math.max.apply(null,ns):0;
+   case 'COUNT':return ns.length;
+   default:throw 0;
+  }
+ }
+ const v=expr();if(p<toks.length)throw 0;return Math.round(v*1e8)/1e8;
+}
+const showCell=(sh,r,c)=>{const v=evalCell(sh,r,c,new Set());return v===''?'':String(v)};
+const curSheet=()=>S.sheets.find(a=>a.id===editing);
+function gridHTML(sh){
+ let h='<div style="overflow:auto;max-height:50vh;border-radius:12px;border:1px solid #ddd;direction:ltr"><table class="grid2"><thead><tr><th></th>';
+ for(let c=0;c<sh.cols;c++)h+='<th>'+colName(c)+'</th>';
+ h+='</tr></thead><tbody>';
+ for(let r=0;r<sh.rows;r++){h+='<tr><th>'+(r+1)+'</th>';for(let c=0;c<sh.cols;c++)h+='<td><input data-r="'+r+'" data-c="'+c+'" value="'+esc(showCell(sh,r,c))+'"></td>';h+='</tr>'}
+ return h+'</tbody></table></div>';
+}
+function refreshGrid(sh,skip){
+ document.querySelectorAll('.grid2 input').forEach(i=>{if(i!==skip&&i!==document.activeElement)i.value=showCell(sh,+i.dataset.r,+i.dataset.c)});
+}
+function newSheet(){const sh={id:uid(),title:'',rows:10,cols:4,data:[]};S.sheets.unshift(sh);save();sheetModal(sh.id)}
+function sheetModal(id){
+ editing=id;const sh=curSheet();
+ modal('<input id="f_stitle" placeholder="'+esc(t('sheetName'))+'" value="'+esc(sh.title)+'" style="font-weight:800;font-size:20px;margin-bottom:6px"><div class="sub" style="margin-bottom:8px">'+t('sheetHint')+'</div><div id="gridwrap">'+gridHTML(sh)+'</div><div class="actions"><button class="btn alt" data-a="srow">'+t('addRow')+'</button><button class="btn alt" data-a="scol">'+t('addCol')+'</button></div><div class="actions"><button class="btn danger" data-a="delSheet">'+t('del')+'</button><button class="btn" data-a="closeSheet">'+t('save')+'</button></div>');
+}
+function icsFor(x){
+ const s=new Date((x.date||ymd(new Date()))+'T'+(x.time||'09:00')+':00'),e=new Date(s.getTime()+30*60000);
+ const f=d=>d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+'T'+z(d.getHours())+z(d.getMinutes())+'00';
+ const stamp=new Date().toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+ return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//hadyr//EN','BEGIN:VEVENT','UID:'+x.id+'@hadyr','DTSTAMP:'+stamp,'DTSTART:'+f(s),'DTEND:'+f(e),'SUMMARY:'+x.text.replace(/[\r\n,;]/g,' '),'BEGIN:VALARM','TRIGGER:-PT0M','ACTION:DISPLAY','DESCRIPTION:hadyr','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+}
+
 async function checkReminders(){
  const now=new Date(),td=ymd(now),hm=z(now.getHours())+':'+z(now.getMinutes());let ch=false;
  for(const x of S.tasks){
@@ -287,7 +362,7 @@ document.addEventListener('click',async e=>{
  switch(a){
   case 'tab':tab=v;render();break;
   case 'filter':filter=v;render();break;
-  case 'add':if(tab==='notes')noteModal();else if(tab==='goals')goalModal();else taskModal();break;
+  case 'add':if(tab==='notes')noteModal();else if(tab==='goals')goalModal();else if(tab==='sheets')newSheet();else taskModal();break;
   case 'toggle':{const x=S.tasks.find(q=>q.id===v);x.done=!x.done;save();render();break}
   case 'editTask':taskModal(v);break;
   case 'saveTask':saveTask();break;
@@ -301,6 +376,16 @@ document.addEventListener('click',async e=>{
   case 'checkin':{const g=S.goals.find(q=>q.id===v),d=ymd(new Date());g.days=g.days||[];g.days=g.days.includes(d)?g.days.filter(q=>q!==d):g.days.concat(d);save();render();break}
   case 'inc':{const g=S.goals.find(q=>q.id===v);g.current++;save();render();break}
   case 'dec':{const g=S.goals.find(q=>q.id===v);g.current=Math.max(0,g.current-1);save();render();break}
+  case 'openSheet':sheetModal(v);break;
+  case 'srow':{const sh=curSheet();if(sh.rows<200){sh.rows++;save();$('#gridwrap').innerHTML=gridHTML(sh)}break}
+  case 'scol':{const sh=curSheet();if(sh.cols<26){sh.cols++;save();$('#gridwrap').innerHTML=gridHTML(sh)}break}
+  case 'closeSheet':save();closeModal();render();break;
+  case 'delSheet':if(confirm(t('del')+'?')){S.sheets=S.sheets.filter(q=>q.id!==editing);save();closeModal();render()}break;
+  case 'addCal':{
+   const text=$('#f_text').value.trim()||'hadyr';
+   const ics=icsFor({id:editing||uid(),text,date:$('#f_date').value,time:$('#f_time').value});
+   const b=new Blob([ics],{type:'text/calendar'}),u=URL.createObjectURL(b),l=document.createElement('a');
+   l.href=u;l.download='hadyr-reminder.ics';l.click();setTimeout(()=>URL.revokeObjectURL(u),2000);toast(t('calHint'));break}
   case 'close':closeModal();break;
   case 'lang':S.lang=v;save();render();break;
   case 'theme':S.theme=v;save();render();break;
@@ -315,7 +400,13 @@ document.addEventListener('click',async e=>{
   case 'import':$('#fileImp').click();break;
  }
 });
-$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal'){closeModal();render()}});
+$('#modal').addEventListener('focusin',e=>{const i=e.target;if(i.dataset&&i.dataset.r!==undefined){const sh=curSheet(),r=+i.dataset.r,c=+i.dataset.c;i.value=(sh.data[r]&&sh.data[r][c])||''}});
+$('#modal').addEventListener('focusout',e=>{
+ const i=e.target;
+ if(i.dataset&&i.dataset.r!==undefined){const sh=curSheet(),r=+i.dataset.r,c=+i.dataset.c;sh.data[r]=sh.data[r]||[];sh.data[r][c]=i.value;save();refreshGrid(sh,e.relatedTarget)}
+});
+$('#modal').addEventListener('change',e=>{if(e.target.id==='f_stitle'){const sh=curSheet();if(sh){sh.title=e.target.value.trim();save()}}});
 $('#fileWp').addEventListener('change',e=>{
  const f=e.target.files[0];if(!f)return;
  const img=new Image(),u=URL.createObjectURL(f);
