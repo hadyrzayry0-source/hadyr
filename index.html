@@ -429,6 +429,7 @@ render();
 if(S.pin&&!unlocked)askPin(()=>{unlocked=true},false);
 setInterval(checkReminders,30000);checkReminders();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-</script>
+</script> 
+ <script src="extras.js"></script>
 </body>
 </html>
